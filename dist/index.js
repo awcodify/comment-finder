@@ -29242,8 +29242,10 @@ async function run() {
       )
     })
 
-    core.debug('github context:')
-    core.debug(github.context)
+    core.debug(`authors: ${requiredAuthors}`)
+    core.debug(`authors (team members): ${flattenedTeamMembers}`)
+    core.debug(`keywords: ${requiredComments}`)
+
     core.setOutput('found', hasRequiredComment)
   } catch (error) {
     core.setFailed(error.message)
