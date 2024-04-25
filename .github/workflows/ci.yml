@@ -55,7 +55,7 @@ jobs:
 
       - name: Test Local Action
         id: test-action
-        uses: ./
+        uses: awcodify/comment-finder@releases/v1
         with:
           token: ${{ secrets.GH_PAT_TOKEN }}
           authors: 'awcodify'
