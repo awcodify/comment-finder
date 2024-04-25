@@ -7,9 +7,8 @@ const github = require('@actions/github')
  */
 async function run() {
   try {
-    const authors = core.getInput('authors')
-    const requiredAuthors = authors.split(',').map(author => author.trim())
-    const requiredComments = core.getInput('keywords').split(',')
+    const authors = core.getInput('authors').split(',').map(author => author.trim())
+    const keywords = core.getInput('keywords').split(',')
 
     const octokit = github.getOctokit(
       core.getInput('token') || process.env.GITHUB_TOKEN
@@ -22,7 +21,7 @@ async function run() {
     })
 
     const teamMembers = await Promise.all(
-      requiredAuthors
+      authors
         .filter(author => author.includes('/'))
         .map(async teamSlug => {
           const [, slug] = teamSlug.split('/')
@@ -35,26 +34,24 @@ async function run() {
     )
 
     const flattenedTeamMembers = teamMembers.flat()
-    const hasRequiredComment = comments.some(comment => {
+    const keywordFoundInSomeComment = comments.some(comment => {
       const author = comment.user.login
       const commentBody = comment.body
-      const contains = requiredComments.some(requiredComment =>
+      const contains = keywords.some(requiredComment =>
         commentBody.includes(requiredComment)
       )
 
-      const isApprovedByAuthor = requiredAuthors.includes(author)
+      const isApprovedByAuthor = authors.includes(author)
       const isApprovedByTeam = flattenedTeamMembers.includes(author)
 
       return (isApprovedByAuthor || isApprovedByTeam) && contains
     })
 
-    core.debug(`authors: ${requiredAuthors}`)
+    core.debug(`authors: ${authors}`)
     core.debug(`authors (team members): ${flattenedTeamMembers}`)
-    core.debug(`keywords: ${requiredComments}`)
+    core.debug(`keywords: ${keywords}`)
 
-    if (hasRequiredComment) {
-      core.setOutput('authors', requiredAuthors)
-    } else {
+    if (!keywordFoundInSomeComment) {
       core.setFailed(
         `One of the required authors or team members must comment with the required keywords.`
       )
