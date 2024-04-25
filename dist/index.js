@@ -29202,8 +29202,8 @@ async function run() {
   try {
     const authors = core.getInput('authors')
     const requiredAuthors = authors.split(',').map(author => author.trim())
+    const requiredComments = core.getInput('keywords').split(',')
 
-    const requiredComments = core.getInput('keywords')
     const octokit = github.getOctokit(
       core.getInput('token') || process.env.GITHUB_TOKEN
     )
@@ -29231,13 +29231,19 @@ async function run() {
     const hasRequiredComment = comments.some(comment => {
       const author = comment.user.login
       const commentBody = comment.body
+      const contains = requiredComments.some(requiredComment =>
+        commentBody.includes(requiredComment)
+      )
+
       return (
         (requiredAuthors.includes(author) ||
           flattenedTeamMembers.includes(author)) &&
-        commentBody.includes(requiredComments)
+        contains
       )
     })
 
+    core.debug('github context:')
+    core.debug(github.context)
     core.setOutput('found', hasRequiredComment)
   } catch (error) {
     core.setFailed(error.message)

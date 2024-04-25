@@ -14,7 +14,7 @@ async function run() {
     const octokit = github.getOctokit(
       core.getInput('token') || process.env.GITHUB_TOKEN
     )
-    
+
     const { data: comments } = await octokit.rest.pulls.getReviewComment({
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
@@ -38,7 +38,9 @@ async function run() {
     const hasRequiredComment = comments.some(comment => {
       const author = comment.user.login
       const commentBody = comment.body
-      const contains = requiredComments.some((requiredComment) => commentBody.includes(requiredComment))
+      const contains = requiredComments.some(requiredComment =>
+        commentBody.includes(requiredComment)
+      )
 
       return (
         (requiredAuthors.includes(author) ||
@@ -46,10 +48,9 @@ async function run() {
         contains
       )
     })
-     
-    core.debug("github context:")
+
+    core.debug('github context:')
     core.debug(github.context)
-    core.setOutput('context', github.context)
     core.setOutput('found', hasRequiredComment)
   } catch (error) {
     core.setFailed(error.message)
