@@ -29235,6 +29235,9 @@ async function run() {
         commentBody.includes(requiredComment)
       )
 
+      isApprovedByAuthor = requiredAuthors.includes(author)
+      isApprovedByTeam = flattenedTeamMembers.includes(author)
+
       return (isApprovedByAuthor || isApprovedByTeam) && contains
     })
 
