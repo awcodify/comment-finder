@@ -15,6 +15,7 @@ inputs:
   keywords:
     description: 'Comment keywords to search for (comma-separated)'
     required: true
+    default: 'approve,LGTM'
   token:
     description: 'GitHub token'
     required: true
