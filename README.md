@@ -5,6 +5,12 @@
 
 This GitHub Action checks if a specific user or team member has commented on the current PR with given keywords.
 
+The action can be useful in various scenarios, such as:
+
+* Enforcing code review policies by requiring specific users or team members to approve changes before merging.
+* Automating deployment processes by ensuring that the necessary approvals have been obtained.
+* Implementing custom workflows based on comment patterns or specific user interactions.
+
 ## Usage
 
 ```yaml
