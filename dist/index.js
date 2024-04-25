@@ -29211,8 +29211,8 @@ async function run() {
     const { data: comments } = await octokit.rest.issues.listComments({
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
-      issue_number: github.context.issue.number,
-    });
+      issue_number: github.context.issue.number
+    })
 
     const teamMembers = await Promise.all(
       requiredAuthors
@@ -29235,8 +29235,8 @@ async function run() {
         commentBody.includes(requiredComment)
       )
 
-      isApprovedByAuthor = requiredAuthors.includes(author)
-      isApprovedByTeam = flattenedTeamMembers.includes(author)
+      const isApprovedByAuthor = requiredAuthors.includes(author)
+      const isApprovedByTeam = flattenedTeamMembers.includes(author)
 
       return (isApprovedByAuthor || isApprovedByTeam) && contains
     })
