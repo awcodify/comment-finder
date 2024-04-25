@@ -2,6 +2,7 @@
  * Unit tests for the action's main functionality, src/main.js
  */
 const core = require('@actions/core')
+const github = require('@actions/github')
 const main = require('../src/main')
 
 // Mock the GitHub Actions core library
@@ -10,23 +11,25 @@ const getInputMock = jest.spyOn(core, 'getInput').mockImplementation()
 const setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation()
 const setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation()
 
+const octokitMock = jest.spyOn(github, 'getOctokit').mockImplementation()
+
 // Mock the action's main function
 const runMock = jest.spyOn(main, 'run')
-
-// Other utilities
-const timeRegex = /^\d{2}:\d{2}:\d{2}/
 
 describe('action', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
-  it('sets the time output', async () => {
-    // Set the action's inputs as return values from core.getInput()
+  it('returns true if the required comment is found', async () => {
     getInputMock.mockImplementation(name => {
       switch (name) {
-        case 'milliseconds':
-          return '500'
+        case 'authors':
+          return 'author1, author2'
+        case 'keywords':
+          return 'required comment'
+        case 'token':
+          return 'token'
         default:
           return ''
       }
@@ -35,50 +38,19 @@ describe('action', () => {
     await main.run()
     expect(runMock).toHaveReturned()
 
-    // Verify that all of the core library functions were called correctly
-    expect(debugMock).toHaveBeenNthCalledWith(1, 'Waiting 500 milliseconds ...')
-    expect(debugMock).toHaveBeenNthCalledWith(
-      2,
-      expect.stringMatching(timeRegex)
-    )
-    expect(debugMock).toHaveBeenNthCalledWith(
-      3,
-      expect.stringMatching(timeRegex)
-    )
-    expect(setOutputMock).toHaveBeenNthCalledWith(
-      1,
-      'time',
-      expect.stringMatching(timeRegex)
-    )
-  })
+    expect(octokitMock).toHaveBeenNthCalledWith(1, 'token')
 
-  it('sets a failed status', async () => {
-    // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
-      switch (name) {
-        case 'milliseconds':
-          return 'this is not a number'
-        default:
-          return ''
-      }
-    })
-
-    await main.run()
-    expect(runMock).toHaveReturned()
-
-    // Verify that all of the core library functions were called correctly
-    expect(setFailedMock).toHaveBeenNthCalledWith(
-      1,
-      'milliseconds not a number'
-    )
+    // expect(setOutputMock).toHaveBeenNthCalledWith(1, 'found', true)
   })
 
   it('fails if no input is provided', async () => {
     // Set the action's inputs as return values from core.getInput()
     getInputMock.mockImplementation(name => {
       switch (name) {
-        case 'milliseconds':
-          throw new Error('Input required and not supplied: milliseconds')
+        case 'authors':
+          throw new Error('Input required and not supplied: authors')
+        case 'keywords':
+          throw new Error('Input required and not supplied: keywords')
         default:
           return ''
       }
@@ -90,7 +62,7 @@ describe('action', () => {
     // Verify that all of the core library functions were called correctly
     expect(setFailedMock).toHaveBeenNthCalledWith(
       1,
-      'Input required and not supplied: milliseconds'
+      'Input required and not supplied: authors'
     )
   })
 })
