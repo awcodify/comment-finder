@@ -59,7 +59,7 @@ jobs:
         with:
           token: ${{ secrets.GH_PAT_TOKEN }}
           authors: 'awcodify'
-          keywords: 'test'
+          keywords: 'approve'
 
       - name: Print Output
         id: output
