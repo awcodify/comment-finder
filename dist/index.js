@@ -29245,7 +29245,13 @@ async function run() {
     core.debug(`authors (team members): ${flattenedTeamMembers}`)
     core.debug(`keywords: ${requiredComments}`)
 
-    core.setOutput('found', hasRequiredComment)
+    if (hasRequiredComment) {
+      core.setOutput('authors', requiredAuthors)
+    } else {
+      core.setFailed(
+        `One of the required authors or team members must comment with the required keywords.`
+      )
+    }
   } catch (error) {
     core.setFailed(error.message)
   }
