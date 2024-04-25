@@ -15,11 +15,11 @@ async function run() {
       core.getInput('token') || process.env.GITHUB_TOKEN
     )
 
-    const { data: comments } = await octokit.rest.pulls.getReviewComment({
+    const { data: comments } = await octokit.rest.issues.listComments({
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
-      pull_number: github.context.payload.pull_request.number
-    })
+      issue_number: github.context.issue.number,
+    });
 
     const teamMembers = await Promise.all(
       requiredAuthors
@@ -41,11 +41,6 @@ async function run() {
       const contains = requiredComments.some(requiredComment =>
         commentBody.includes(requiredComment)
       )
-
-      isApprovedByAuthor = requiredAuthors.includes(author)
-      isApprovedByTeam = flattenedTeamMembers.includes(author)
-      core.debug(`is ${author} part of ${requiredAuthors}? ${isApprovedByAuthor} `)
-      core.debug(`is ${flattenedTeamMembers} part of ${requiredAuthors}? ${isApprovedByTeam} `)
 
       return (isApprovedByAuthor || isApprovedByTeam) && contains
     })
