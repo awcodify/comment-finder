@@ -7,7 +7,10 @@ const github = require('@actions/github')
  */
 async function run() {
   try {
-    const authors = core.getInput('authors').split(',').map(author => author.trim())
+    const authors = core
+      .getInput('authors')
+      .split(',')
+      .map(author => author.trim())
     const keywords = core.getInput('keywords').split(',')
 
     const octokit = github.getOctokit(

@@ -1,6 +1,7 @@
 name: 'Comment Finder'
 description:
-  'Check if a specific user or team member has commented on the current PR with given keywords'
+  'Check if a specific user or team member has commented on the current PR with
+  given keywords'
 author: 'awcodify@gmail.com'
 
 branding:
@@ -9,8 +10,9 @@ branding:
 
 inputs:
   authors:
-    description: 
-      'GitHub usernames or team slugs separated by commas. This will be used to filter comments by the author'
+    description:
+      'GitHub usernames or team slugs separated by commas. This will be used to
+      filter comments by the author'
     required: true
   keywords:
     description: 'Comment keywords to search for (comma-separated)'
