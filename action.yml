@@ -1,18 +1,24 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Comment Finder'
+description:
+  'Check if a specific user or team member has commented on the current PR with given keywords'
+author: 'awcodify@gmail.com'
 
-# Define your inputs here.
+branding:
+  icon: 'search'
+  color: 'blue'
+
 inputs:
-  milliseconds:
-    description: 'Your input description here'
+  authors:
+    description: 
+      'GitHub usernames or team slugs separated by commas. This will be used to filter comments by the author'
     required: true
-    default: '1000'
-
-# Define your outputs here.
-outputs:
-  time:
-    description: 'Your output description here'
+  keywords:
+    description: 'Comment keywords to search for (comma-separated)'
+    required: true
+    default: 'approve,yes,LGTM'
+  token:
+    description: 'GitHub token'
+    required: true
 
 runs:
   using: node20
