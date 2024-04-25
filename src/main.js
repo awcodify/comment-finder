@@ -42,11 +42,12 @@ async function run() {
         commentBody.includes(requiredComment)
       )
 
-      return (
-        (requiredAuthors.includes(author) ||
-          flattenedTeamMembers.includes(author)) &&
-        contains
-      )
+      isApprovedByAuthor = requiredAuthors.includes(author)
+      isApprovedByTeam = flattenedTeamMembers.includes(author)
+      core.debug(`is ${author} part of ${requiredAuthors}? ${isApprovedByAuthor} `)
+      core.debug(`is ${flattenedTeamMembers} part of ${requiredAuthors}? ${isApprovedByTeam} `)
+
+      return (isApprovedByAuthor || isApprovedByTeam) && contains
     })
 
     core.debug(`authors: ${requiredAuthors}`)
