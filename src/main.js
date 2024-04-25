@@ -10,11 +10,11 @@ async function run() {
     const authors = core.getInput('authors')
     const requiredAuthors = authors.split(',').map(author => author.trim())
     const requiredComments = core.getInput('keywords').split(',')
-    
+
     const octokit = github.getOctokit(
       core.getInput('token') || process.env.GITHUB_TOKEN
     )
-
+    
     const { data: comments } = await octokit.rest.pulls.getReviewComment({
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
@@ -47,6 +47,9 @@ async function run() {
       )
     })
      
+    core.debug("github context:")
+    core.debug(github.context)
+    core.setOutput('context', github.context)
     core.setOutput('found', hasRequiredComment)
   } catch (error) {
     core.setFailed(error.message)
