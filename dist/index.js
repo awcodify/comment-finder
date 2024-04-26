@@ -29205,10 +29205,9 @@ async function run() {
       .split(',')
       .map(author => author.trim())
     const keywords = core.getInput('keywords').split(',')
+    const failOnMissmatch = core.getBooleanInput('fail_on_missmatch')
 
-    const octokit = github.getOctokit(
-      core.getInput('token') || process.env.GITHUB_TOKEN
-    )
+    const octokit = github.getOctokit(core.getInput('token'))
 
     const { data: comments } = await octokit.rest.issues.listComments({
       owner: github.context.repo.owner,
@@ -29229,28 +29228,38 @@ async function run() {
         })
     )
 
+    const matchingAuthors = []
     const flattenedTeamMembers = teamMembers.flat()
     const keywordFoundInSomeComment = comments.some(comment => {
-      const author = comment.user.login
+      const commentAuthor = comment.user.login
       const commentBody = comment.body
-      const contains = keywords.some(requiredComment =>
-        commentBody.includes(requiredComment)
+      const containsKeywords = keywords.some(keyword =>
+        commentBody.includes(keyword)
       )
+      const isAuthorMatch =
+        authors.includes(commentAuthor) ||
+        flattenedTeamMembers.includes(commentAuthor)
 
-      const isApprovedByAuthor = authors.includes(author)
-      const isApprovedByTeam = flattenedTeamMembers.includes(author)
-
-      return (isApprovedByAuthor || isApprovedByTeam) && contains
+      if (isAuthorMatch && containsKeywords) {
+        matchingAuthors.push(commentAuthor)
+      }
+      return isAuthorMatch && containsKeywords
     })
 
     core.debug(`authors: ${authors}`)
     core.debug(`authors (team members): ${flattenedTeamMembers}`)
     core.debug(`keywords: ${keywords}`)
+    core.debug(`fail_on_missmatch: ${failOnMissmatch}`)
+
+    core.setOutput('matching_authors', matchingAuthors)
 
     if (!keywordFoundInSomeComment) {
-      core.setFailed(
-        `One of the required authors or team members must comment with the required keywords.`
-      )
+      const notFoundLog = 'No comment with the required keywords found.'
+      if (failOnMissmatch) {
+        core.setFailed(notFoundLog)
+      } else {
+        core.warning(notFoundLog)
+      }
     }
   } catch (error) {
     core.setFailed(error.message)
