@@ -25,7 +25,7 @@ inputs:
     description:
       'Fail the action if the given keywords are not found in the comments'
     default: 'false'
-      
+
 outputs:
   matching_authors:
     description: 'Authors who have commented with the given keywords'

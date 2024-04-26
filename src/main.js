@@ -14,9 +14,7 @@ async function run() {
     const keywords = core.getInput('keywords').split(',')
     const failOnMissmatch = core.getBooleanInput('fail_on_missmatch')
 
-    const octokit = github.getOctokit(
-      core.getInput('token') || process.env.GITHUB_TOKEN
-    )
+    const octokit = github.getOctokit(core.getInput('token'))
 
     const { data: comments } = await octokit.rest.issues.listComments({
       owner: github.context.repo.owner,

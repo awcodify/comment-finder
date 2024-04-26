@@ -8,6 +8,9 @@ const main = require('../src/main')
 // Mock the GitHub Actions core library
 const debugMock = jest.spyOn(core, 'debug').mockImplementation()
 const getInputMock = jest.spyOn(core, 'getInput').mockImplementation()
+const getBooleanInputMock = jest
+  .spyOn(core, 'getBooleanInput')
+  .mockImplementation()
 const setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation()
 const setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation()
 
@@ -30,6 +33,15 @@ describe('action', () => {
           return 'required comment'
         case 'token':
           return 'token'
+        default:
+          return ''
+      }
+    })
+
+    getBooleanInputMock.mockImplementation(name => {
+      switch (name) {
+        case 'fail_on_missmatch':
+          return false
         default:
           return ''
       }
