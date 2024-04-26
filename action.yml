@@ -21,7 +21,9 @@ inputs:
   token:
     description: 'GitHub token'
     required: true
-
+  fail_on_missmatch:
+    description:
+      'Fail the action if the given keywords are not found in the comments'
 outputs:
   matching_authors:
     description: 'Authors who have commented with the given keywords'

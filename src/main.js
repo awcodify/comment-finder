@@ -12,7 +12,7 @@ async function run() {
       .split(',')
       .map(author => author.trim())
     const keywords = core.getInput('keywords').split(',')
-    const failedIfNotFound = core.getInput('failed_if_not_found') === 'true'
+    const failOnMissmatch = core.getInput('fail_on_missmatch') === 'true'
 
     const octokit = github.getOctokit(
       core.getInput('token') || process.env.GITHUB_TOKEN
@@ -63,7 +63,7 @@ async function run() {
 
     if (!keywordFoundInSomeComment) {
       const notFoundLog = 'No comment with the required keywords found.'
-      if (failedIfNotFound) {
+      if (failOnMissmatch) {
         core.setFailed(notFoundLog)
       } else {
         core.warning(notFoundLog)

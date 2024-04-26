@@ -45,6 +45,7 @@ jobs:
 - **keywords**: Comment keywords to search for (comma-separated). For instance:
   `approve,yes,LGTM`.
 - **token**: GitHub token.
+- **fail_on_missmatch**: Fail the action if the given keywords are not found in the comments
 
 ## Outputs
 
