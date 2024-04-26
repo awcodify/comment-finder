@@ -48,4 +48,5 @@ jobs:
 
 ## Outputs
 
-- **matching_authors**: This will show authors which commented using given keyword in the PR.
+- **matching_authors**: This will show authors which commented using given
+  keyword in the PR.
