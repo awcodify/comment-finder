@@ -58,6 +58,7 @@ async function run() {
     core.debug(`authors: ${authors}`)
     core.debug(`authors (team members): ${flattenedTeamMembers}`)
     core.debug(`keywords: ${keywords}`)
+    core.debug(`fail_on_missmatch: ${failOnMissmatch}`)
 
     core.setOutput('matching_authors', matchingAuthors)
 
