@@ -29205,6 +29205,7 @@ async function run() {
       .split(',')
       .map(author => author.trim())
     const keywords = core.getInput('keywords').split(',')
+    const failedIfNotFound = core.getInput('failed_if_not_found') === 'true'
 
     const octokit = github.getOctokit(
       core.getInput('token') || process.env.GITHUB_TOKEN
@@ -29251,12 +29252,15 @@ async function run() {
     core.debug(`authors (team members): ${flattenedTeamMembers}`)
     core.debug(`keywords: ${keywords}`)
 
-    if (keywordFoundInSomeComment) {
-      core.setOutput('matching_authors', matchingAuthors)
-    } else {
-      core.setFailed(
-        `One of the required authors or team members must comment with the required keywords.`
-      )
+    core.setOutput('matching_authors', matchingAuthors)
+
+    if (!keywordFoundInSomeComment) {
+      const notFoundLog = 'No comment with the required keywords found.'
+      if (failedIfNotFound) {
+        core.setFailed(notFoundLog)
+      } else {
+        core.warning(notFoundLog)
+      }
     }
   } catch (error) {
     core.setFailed(error.message)
