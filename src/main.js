@@ -12,7 +12,7 @@ async function run() {
       .split(',')
       .map(author => author.trim())
     const keywords = core.getInput('keywords').split(',')
-    const failOnMissmatch = core.getInput('fail_on_missmatch') === 'true'
+    const failOnMissmatch = core.getBooleanInput('fail_on_missmatch')
 
     const octokit = github.getOctokit(
       core.getInput('token') || process.env.GITHUB_TOKEN
