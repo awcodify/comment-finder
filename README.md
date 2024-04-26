@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check for comments
-        uses: your-github-username/comment-finder@v1
+        uses: awcodify/comment-finder@v1
         with:
           authors: 'username1,username2'
           keywords: 'approve,yes,LGTM'
