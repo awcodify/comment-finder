@@ -36,25 +36,31 @@ async function run() {
         })
     )
 
+    const matchingAuthors = []
     const flattenedTeamMembers = teamMembers.flat()
     const keywordFoundInSomeComment = comments.some(comment => {
-      const author = comment.user.login
+      const commentAuthor = comment.user.login
       const commentBody = comment.body
-      const contains = keywords.some(requiredComment =>
-        commentBody.includes(requiredComment)
+      const containsKeywords = keywords.some(keyword =>
+        commentBody.includes(keyword)
       )
+      const isAuthorMatch =
+        authors.includes(commentAuthor) ||
+        flattenedTeamMembers.includes(commentAuthor)
 
-      const isApprovedByAuthor = authors.includes(author)
-      const isApprovedByTeam = flattenedTeamMembers.includes(author)
-
-      return (isApprovedByAuthor || isApprovedByTeam) && contains
+      if (isAuthorMatch && containsKeywords) {
+        matchingAuthors.push(commentAuthor)
+      }
+      return isAuthorMatch && containsKeywords
     })
 
     core.debug(`authors: ${authors}`)
     core.debug(`authors (team members): ${flattenedTeamMembers}`)
     core.debug(`keywords: ${keywords}`)
 
-    if (!keywordFoundInSomeComment) {
+    if (keywordFoundInSomeComment) {
+      core.setOutput('mathing_author', matchingAuthors)
+    } else {
       core.setFailed(
         `One of the required authors or team members must comment with the required keywords.`
       )
