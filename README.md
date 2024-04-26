@@ -45,3 +45,7 @@ jobs:
 - **keywords**: Comment keywords to search for (comma-separated). For instance:
   `approve,yes,LGTM`.
 - **token**: GitHub token.
+
+## Outputs
+
+- **matching_authors**: This will show authors which commented using given keyword in the PR.

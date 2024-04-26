@@ -59,7 +59,7 @@ async function run() {
     core.debug(`keywords: ${keywords}`)
 
     if (keywordFoundInSomeComment) {
-      core.setOutput('mathing_author', matchingAuthors)
+      core.setOutput('matching_authors', matchingAuthors)
     } else {
       core.setFailed(
         `One of the required authors or team members must comment with the required keywords.`
