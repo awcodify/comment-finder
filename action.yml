@@ -1,5 +1,7 @@
 name: 'Comment Finder'
-description: 'Check if a specific user or team member has commented on the current PR with given keywords'
+description:
+  'Check if a specific user or team member has commented on the current PR with
+  given keywords'
 author: 'awcodify@gmail.com'
 
 branding:
@@ -8,7 +10,9 @@ branding:
 
 inputs:
   authors:
-    description: 'GitHub usernames or team slugs separated by commas. This will be used to filter comments by the author'
+    description:
+      'GitHub usernames or team slugs separated by commas. This will be used to
+      filter comments by the author'
     required: true
   keywords:
     description: 'Comment keywords to search for (comma-separated)'
@@ -18,7 +22,12 @@ inputs:
     description: 'GitHub token'
     required: true
   fail_on_missmatch:
-    description: 'Fail the action if the given keywords are not found in the comments'
+    description:
+      'Fail the action if the given keywords are not found in the comments'
+    default: 'false'
+  include_review_comments:
+    description:
+      'Fail the action if the given keywords are not found in the comments'
     default: 'false'
 
 outputs:

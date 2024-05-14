@@ -13,20 +13,25 @@ async function run() {
       .map(author => author.trim())
     const keywords = core.getInput('keywords').split(',')
     const failOnMissmatch = core.getBooleanInput('fail_on_missmatch')
+    const includeReviewComments = core.getBooleanInput(
+      'include_review_comments'
+    )
 
     const octokit = github.getOctokit(core.getInput('token'))
 
     const { data: issueComments } = await octokit.rest.issues.listComments({
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
-      issue_number: github.context.issue.number
+      issue_number: github.context.issue.number || 726
     })
 
-    const { data: reviews } = await octokit.rest.pulls.listReviews({
-      owner: github.context.repo.owner,
-      repo: github.context.repo.repo,
-      pull_number: github.context.issue.number
-    })
+    const { data: reviews } = includeReviewComments
+      ? await octokit.rest.pulls.listReviews({
+          owner: github.context.repo.owner,
+          repo: github.context.repo.repo,
+          pull_number: github.context.issue.number || 726
+        })
+      : { data: [] }
 
     const comments = [...issueComments, ...reviews]
 
