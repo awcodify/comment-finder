@@ -54,7 +54,7 @@ async function run() {
       const commentAuthor = comment.user.login
       const commentBody = comment.body
       const containsKeywords = keywords.some(keyword =>
-        commentBody.includes(keyword)
+        commentBody.toLocaleLowerCase().includes(keyword.toLowerCase())
       )
       const isAuthorMatch =
         authors.includes(commentAuthor) ||
