@@ -40,7 +40,7 @@ describe('action', () => {
 
     getBooleanInputMock.mockImplementation(name => {
       switch (name) {
-        case 'fail_on_missmatch':
+        case 'fail_on_mismatch':
           return false
         default:
           return ''

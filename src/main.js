@@ -12,7 +12,7 @@ async function run() {
       .split(',')
       .map(author => author.trim())
     const keywords = core.getInput('keywords').split(',')
-    const failOnMissmatch = core.getBooleanInput('fail_on_missmatch')
+    const failOnMissmatch = core.getBooleanInput('fail_on_mismatch')
     const includeReviewComments = core.getBooleanInput(
       'include_review_comments'
     )
@@ -69,7 +69,7 @@ async function run() {
     core.debug(`authors: ${authors}`)
     core.debug(`authors (team members): ${flattenedTeamMembers}`)
     core.debug(`keywords: ${keywords}`)
-    core.debug(`fail_on_missmatch: ${failOnMissmatch}`)
+    core.debug(`fail_on_mismatch: ${failOnMissmatch}`)
 
     core.setOutput('matching_authors', matchingAuthors)
 
