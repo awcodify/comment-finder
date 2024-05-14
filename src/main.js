@@ -12,15 +12,28 @@ async function run() {
       .split(',')
       .map(author => author.trim())
     const keywords = core.getInput('keywords').split(',')
-    const failOnMissmatch = core.getBooleanInput('fail_on_missmatch')
+    const failOnMissmatch = core.getBooleanInput('fail_on_mismatch')
+    const includeReviewComments = core.getBooleanInput(
+      'include_review_comments'
+    )
 
     const octokit = github.getOctokit(core.getInput('token'))
 
-    const { data: comments } = await octokit.rest.issues.listComments({
+    const { data: issueComments } = await octokit.rest.issues.listComments({
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
-      issue_number: github.context.issue.number
+      issue_number: github.context.issue.number || 726
     })
+
+    const { data: reviews } = includeReviewComments
+      ? await octokit.rest.pulls.listReviews({
+          owner: github.context.repo.owner,
+          repo: github.context.repo.repo,
+          pull_number: github.context.issue.number || 726
+        })
+      : { data: [] }
+
+    const comments = [...issueComments, ...reviews]
 
     const teamMembers = await Promise.all(
       authors
@@ -56,7 +69,7 @@ async function run() {
     core.debug(`authors: ${authors}`)
     core.debug(`authors (team members): ${flattenedTeamMembers}`)
     core.debug(`keywords: ${keywords}`)
-    core.debug(`fail_on_missmatch: ${failOnMissmatch}`)
+    core.debug(`fail_on_mismatch: ${failOnMissmatch}`)
 
     core.setOutput('matching_authors', matchingAuthors)
 
