@@ -16,11 +16,19 @@ async function run() {
 
     const octokit = github.getOctokit(core.getInput('token'))
 
-    const { data: comments } = await octokit.rest.issues.listComments({
+    const { data: issueComments } = await octokit.rest.issues.listComments({
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
       issue_number: github.context.issue.number
     })
+
+    const { data: reviews } = await octokit.rest.pulls.listReviews({
+      owner: github.context.repo.owner,
+      repo: github.context.repo.repo,
+      pull_number: github.context.issue.number
+    })
+
+    const comments = [...issueComments, ...reviews]
 
     const teamMembers = await Promise.all(
       authors
