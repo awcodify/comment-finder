@@ -47,6 +47,7 @@ jobs:
 - **token**: GitHub token.
 - **fail_on_mismatch**: Fail the action if the given keywords are not found in
   the comments
+- **include_review_comments**: This will allow use to search comment from pull request review
 
 ## Outputs
 
